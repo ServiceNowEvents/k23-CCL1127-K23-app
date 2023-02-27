@@ -23,7 +23,6 @@ const initializeMedia = ({
 		.getUserMedia({ video: true })
 		.then((stream) => {
 			console.log("Got User Media!");
-			//video.src = window.URL.createObjectURL(stream);
 			updateState({ stream: stream });
 			video.srcObject = stream;
 			video.play();

@@ -26,7 +26,6 @@ const initializeMedia = ({
 			updateState({ stream: stream });
 			video.srcObject = stream;
 			video.play();
-			toggleTracks({ stream }, enabled);
 		})
 		.catch((exc) => {
 			console.log("Error Getting Media!");
@@ -53,12 +52,34 @@ const actionHandlers = {
 		dispatch,
 	}) => {
 		initializeMedia({ host, properties, dispatch, updateState });
+	},
+	[COMPONENT_PROPERTY_CHANGED]: ({
+		state,
+		action: {
+			payload: { name, value, previousValue },
+		},
+		dispatch,
+		updateState,
+	}) => {
+		console.log(COMPONENT_PROPERTY_CHANGED, { name, value, previousValue, state });
+
+		const propertyHandlers = {
+			snapRequested: () => {
+				if (value && value != previousValue) {
+					snap({ state, dispatch, updateState });
+				}
+			}
+		};
+
+		if (propertyHandlers[name]) {
+			propertyHandlers[name]();
+		}
 	}
 };
 
 const dispatches = {}; // Events that will be dispatched by this component
 
-const properties = {
+export const properties = {
 	/**
 	 * Camera is enabled
 	 * @type {boolean}
@@ -67,7 +88,32 @@ const properties = {
 		schema: { type: "boolean" },
 		default: false,
 	},
-}; 
+
+	/**
+	 * Triggers a snapshot
+	 * Required: No
+	 */
+	snapRequested: {
+		default: "",
+		schema: { type: "string" },
+	},
+
+	/**
+	 * How long to wait after requesting a snap and beginning the shots.
+	 */
+	countdownDurationSeconds: {
+		default: 0,
+		schema: { type: "number" },
+	},
+
+	/**
+	 * Number of seconds to pause between each snap.
+	 */
+	pauseDurationSeconds: {
+		default: 1,
+		schema: { type: "number" },
+	}
+};
 
 createCustomElement("snc-k23-uic-pb", {
 	renderer: { type: snabbdom },

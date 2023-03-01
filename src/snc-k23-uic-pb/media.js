@@ -1,12 +1,12 @@
-export function switchMediaDevice({
+export function selectMediaDevice({
 	video,
-	cameraDeviceId,
-	enabled,
-	updateState
+	cameraDeviceId = "",
+	enabled
 }) {
 	console.log("SWITCH MEDIA DEVICE", { cameraDeviceId, enabled });
 	// Get access to the camera!
-	navigator.mediaDevices
+	return new Promise((resolve, reject) => {
+    navigator.mediaDevices
 		.getUserMedia({ video: { deviceId: cameraDeviceId } })
 		.then(function (stream) {
 			console.log("Got User Media!", { video, cameraDeviceId });
@@ -18,12 +18,13 @@ export function switchMediaDevice({
 			video.srcObject = stream;
 			toggleTracks({ video, enabled });
 			video.play();
-			updateState({ stream: stream });
+            resolve();
 		})
 		.catch((exc) => {
 			console.log("Error Getting Media!", exc);
-			throw exc;
+			reject({exc});
 		});
+    });
 }
 
 export function toggleTracks({ video: { srcObject: stream }, enabled }) {
@@ -66,20 +67,27 @@ export function getConnectedDevices({
     });
 }
 
-export function drawImage(
-	pos,
-	{
-		context,
-		video,
-		properties: {
-			imageSize: { width, height },
-			gap,
-		},
-	}
-) {
-	const hWidth = width / 2;
-	const hHeight = height / 2;
+export function initializeCanvas({context, imageSize = { width: 800, height: 600}, gap = 10, chin = 50, fillStyle}){
+	const {canvas} = context;
+    // Add room for gaps above, between and below images
+	canvas.width = imageSize.width;
+	canvas.height = imageSize.height;
 
+	context.fillStyle = fillStyle;
+	context.fillRect(0, 0, canvas.width, canvas.height);
+}
+
+export function drawImage({
+	pos,
+	context,
+	video,
+	gap,
+	chin
+}) {
+	const { canvas : {width, height} } = context;
+	// Make the shots slightly smaller to accomodate the gap/chin
+	const hWidth = (width / 2) - ((gap * 3) / 2);
+	const hHeight = ((height - chin) / 2) - (gap * 2);
 	// Define where the first, second, third and fourth images appear
 	// in the grid
 	const posMap = {

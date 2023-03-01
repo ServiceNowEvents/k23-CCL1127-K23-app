@@ -4,11 +4,106 @@
 	        "innerComponents": [],
 			"uiBuilder": {
 				"associatedTypes": ["global.core", "global.landing-page"],
-				"label": "My Component",
-				"icon": "document-outline",
-				"description": "A description of my component",
+				"label": "K23 Photobooth Camera",
+				"icon": "camera-outline",
+				"description": "The photobooth lab's camera from CreatorCon 23!",
 				"category": "primitives"
-			}
+			},
+			"properties": [{
+				"name": "enabled",
+				"label": "Enabled",
+				"description": "Whether or not the camera stream is enabled.",
+				"fieldType": "boolean",
+				"defaultValue": false
+			},
+			{
+				"name": "snapRequested",
+				"label": "Snap Requested",
+				"defaultValue": "",
+				"description": "A string containing timestamp that can be passed down to trigger a snap. Use script to set this value such as Date.now()",
+				"fieldType": "string",
+				"typeMetadata": {
+					"schema": {
+						"type": "string"
+					}
+				}
+			},
+			{
+				"name": "countdownDurationSeconds",
+				"label": "Countdown Duration Seconds",
+				"defaultValue": 0,
+				"description": "Number of seconds to wait after Snap Requested to take the shot",
+				"fieldType": "integer",
+				"typeMetadata" : {
+					"schema" : {
+						"type" : "number"
+					}
+				}
+			}],
+			"actions": [{
+					"action": "PHOTO_BOOTH_CAMERA#SNAPPED",
+					"label": "Photo Booth Camera Snapped",
+					"description": "Dispatched when a photo is snapped.  Includes the imageData in the payload.",
+					"payload": [{
+						"name": "imageData",
+						"label": "Image Data",
+						"description": "The image data from the camera after the snap is completed",
+						"fieldType": "string"
+					}]
+				},
+				{
+					"action": "PHOTO_BOOTH_CAMERA#AVAILABLE_CAMERAS_UPDATED",
+					"label": "Photo booth Available Cameras Updated",
+					"description": "Dispatched when the available cameras are updated.",
+					"payload": [{
+							"name": "selectedCameraDeviceId",
+							"label": "Selected Camera Device ID",
+							"description": "",
+							"fieldType": "string"
+						},
+						{
+							"name": "cameras",
+							"label": "Cameras",
+							"description": "List of camera objects with the label, deviceId, id (same as deviceId), groupId and kind fields. [{deviceId, id, kind, groupId, kind}]. See https://webrtc.org/",
+							"fieldType": "json",
+							"typeMetadata": {
+								"schema": {
+									"type": "array",
+									"items": [{
+										"type": "object",
+										"properties": {
+											"deviceId": {
+												"type": "string"
+											},
+											"kind": {
+												"type": "string"
+											},
+											"label": {
+												"type": "string"
+											},
+											"groupId": {
+												"type": "string"
+											}
+										}
+									}]
+								}
+							}
+						},
+						{
+							"name": "selectedDeviceIdFound",
+							"label": "Selected Device ID was Found",
+							"description": "Whether or not the Selected Camera Device ID was found and is in use. If 'false' check Actual Camera Device ID (boundCameraDeviceId) to see if another camera was selected instead.",
+							"fieldType": "boolean"
+						},
+						{
+							"name": "boundCameraDeviceId",
+							"label": "Actual Camera Device ID",
+							"description": "The Device ID of the camera that is actually being used. (May be different from the Selected Camera Device ID if that device could not be found but another camera was available.)",
+							"fieldType": "string"
+						}
+					]
+				}
+			]
 	    }
 	},
 	"scopeName": "x_snc_k23_uic_pb"

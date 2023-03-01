@@ -1,7 +1,8 @@
 import { createCustomElement } from "@servicenow/ui-core";
 import snabbdom from "@servicenow/ui-renderer-snabbdom";
 import styles from "./styles.scss";
-import { selectMediaDevice } from "./media";
+import { selectMediaDevice, toggleTracks, snap, initializeCanvas } from "./media";
+import { PHOTOBOOTH_CAMERA_SNAPPED } from "./events";
 import { actionTypes } from "@servicenow/ui-core";
 
 const { COMPONENT_CONNECTED, COMPONENT_PROPERTY_CHANGED, COMPONENT_DOM_READY } =
@@ -21,14 +22,16 @@ const initializeMedia = ({
 	const canvas = host.shadowRoot.ownerDocument.createElement("canvas");
 	const context = canvas.getContext("2d");
 
+	initializeCanvas({context, fillStyle : "gray"});
+	// Get access to the camera!
+	selectMediaDevice({enabled, video});
+
 	// We will need these later when taking snapshots
 	updateState({
 		video,
 		context
 	});
-
-	// Get access to the camera!
-	selectMediaDevice({enabled, video});
+	
 };
 
 const view = (state, { updateState }) => {
@@ -47,31 +50,8 @@ const actionHandlers = {
 		host,
 		state: { properties },
 		updateState,
-		dispatch,
 	}) => {
-		initializeMedia({ host, properties, dispatch, updateState });
-	},
-	[COMPONENT_PROPERTY_CHANGED]: ({
-		state,
-		action: {
-			payload: { name, value, previousValue },
-		},
-		dispatch,
-		updateState,
-	}) => {
-		console.log(COMPONENT_PROPERTY_CHANGED, { name, value, previousValue, state });
-
-		const propertyHandlers = {
-			snapRequested: () => {
-				if (value && value != previousValue) {
-					snap({ state, dispatch, updateState });
-				}
-			}
-		};
-
-		if (propertyHandlers[name]) {
-			propertyHandlers[name]();
-		}
+		initializeMedia({ host, properties, updateState });
 	}
 };
 
@@ -85,14 +65,6 @@ export const properties = {
 	enabled: {
 		schema: { type: "boolean" },
 		default: true,
-	},
-	/**
-	 * Triggers a snapshot
-	 * Required: No
-	 */
-	snapRequested: {
-		default: "",
-		schema: { type: "string" },
 	},
 
 	/**
@@ -111,14 +83,6 @@ export const properties = {
 		default: 0,
 		schema: { type: "number" },
 	},
-
-	/**
-	 * Number of seconds to pause between each snap.
-	 */
-	pauseDurationSeconds: {
-		default: 1,
-		schema: { type: "number" },
-	}
 };
 
 createCustomElement("snc-k23-uic-pb", {

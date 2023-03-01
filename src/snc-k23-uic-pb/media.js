@@ -6,7 +6,7 @@ export function selectMediaDevice({
 	console.log("SWITCH MEDIA DEVICE", { cameraDeviceId, enabled });
 	// Get access to the camera!
 	return new Promise((resolve, reject) => {
-        navigator.mediaDevices
+    navigator.mediaDevices
 		.getUserMedia({ video: { deviceId: cameraDeviceId } })
 		.then(function (stream) {
 			console.log("Got User Media!", { video, cameraDeviceId });
@@ -88,7 +88,6 @@ export function drawImage({
 	// Make the shots slightly smaller to accomodate the gap/chin
 	const hWidth = (width / 2) - ((gap * 3) / 2);
 	const hHeight = ((height - chin) / 2) - (gap * 2);
-
 	// Define where the first, second, third and fourth images appear
 	// in the grid
 	const posMap = {

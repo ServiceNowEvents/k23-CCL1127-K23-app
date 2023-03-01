@@ -1,7 +1,7 @@
 import { createCustomElement } from "@servicenow/ui-core";
 import snabbdom from "@servicenow/ui-renderer-snabbdom";
 import styles from "./styles.scss";
-
+import { selectMediaDevice } from "./media";
 import { actionTypes } from "@servicenow/ui-core";
 
 const { COMPONENT_CONNECTED, COMPONENT_PROPERTY_CHANGED, COMPONENT_DOM_READY } =
@@ -13,25 +13,22 @@ const initializeMedia = ({
 	properties: { enabled },
 }) => {
 	console.log("Initialize Media");
-	console.log(navigator.mediaDevices);
 
-	// This is where the snapshots will be rendered
+	// This is where the camera will be rendered
+	// Note that "host" is how you get access to the DOM
 	const video = host.shadowRoot.getElementById("video");
+	// This is how the snapshot is composed
+	const canvas = host.shadowRoot.ownerDocument.createElement("canvas");
+	const context = canvas.getContext("2d");
+
+	// We will need these later when taking snapshots
+	updateState({
+		video,
+		context
+	});
 
 	// Get access to the camera!
-	navigator.mediaDevices
-		.getUserMedia({ video: true })
-		.then((stream) => {
-			console.log("Got User Media!");
-			updateState({ stream: stream });
-			video.srcObject = stream;
-			video.play();
-			toggleTracks({ stream }, enabled);
-		})
-		.catch((exc) => {
-			console.log("Error Getting Media!");
-			console.log(exc);
-		});
+	selectMediaDevice({enabled, video});
 };
 
 const view = (state, { updateState }) => {
@@ -65,7 +62,15 @@ const properties = {
 	 */
 	enabled: {
 		schema: { type: "boolean" },
-		default: false,
+		default: true,
+	},
+	/**
+	 * Triggers a snapshot
+	 * Required: No
+	 */
+	snapRequested: {
+		default: "",
+		schema: { type: "string" },
 	},
 }; 
 

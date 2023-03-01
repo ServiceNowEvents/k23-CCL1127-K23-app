@@ -1,15 +1,15 @@
 import { createCustomElement } from "@servicenow/ui-core";
 import snabbdom from "@servicenow/ui-renderer-snabbdom";
 import styles from "./styles.scss";
-import { selectMediaDevice } from "./media";
+import { selectMediaDevice, toggleTracks, snap, initializeCanvas } from "./media";
 import { actionTypes } from "@servicenow/ui-core";
 
 const { COMPONENT_CONNECTED, COMPONENT_PROPERTY_CHANGED, COMPONENT_DOM_READY } =
 	actionTypes;
 
-const initializeMedia = ({
-	host,
-	updateState,
+const initializeMedia = ({ 
+	host, 
+	updateState, 
 	properties: { enabled },
 }) => {
 	console.log("Initialize Media");
@@ -21,14 +21,15 @@ const initializeMedia = ({
 	const canvas = host.shadowRoot.ownerDocument.createElement("canvas");
 	const context = canvas.getContext("2d");
 
+	initializeCanvas({ context, fillStyle: "gray" });
+	// Get access to the camera!
+	selectMediaDevice({ enabled, video });
+
 	// We will need these later when taking snapshots
 	updateState({
 		video,
-		context
+		context,
 	});
-
-	// Get access to the camera!
-	selectMediaDevice({enabled, video});
 };
 
 const view = (state, { updateState }) => {
@@ -49,8 +50,8 @@ const actionHandlers = {
 		updateState,
 		dispatch,
 	}) => {
-		initializeMedia({ host, properties, dispatch, updateState });
-	}
+		initializeMedia({ host, properties, updateState });
+	},
 };
 
 const dispatches = {}; // Events that will be dispatched by this component
@@ -72,7 +73,7 @@ const properties = {
 		default: "",
 		schema: { type: "string" },
 	},
-}; 
+};
 
 createCustomElement("snc-k23-uic-pb", {
 	renderer: { type: snabbdom },

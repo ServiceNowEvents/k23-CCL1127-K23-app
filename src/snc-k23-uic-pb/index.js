@@ -52,7 +52,45 @@ const actionHandlers = {
 		updateState,
 	}) => {
 		initializeMedia({ host, properties, updateState });
-	}
+	},
+
+	[COMPONENT_PROPERTY_CHANGED]: ({
+		state,
+		action: {
+			payload: { name, value, previousValue },
+		},
+		dispatch,
+		updateState,
+	}) => {
+		console.log(COMPONENT_PROPERTY_CHANGED, { name, value });
+		const {
+			snapState,
+			video,
+		} = state;
+
+		const propertyHandlers = {
+			snapRequested: () => {
+				if (value && value != previousValue) {
+					snap({ state, updateState }).then(({context}) => {
+						console.log("SNAP COMPLETED", context);
+						const imageData = context.canvas.toDataURL("image/jpeg");
+						dispatch(PHOTOBOOTH_CAMERA_SNAPPED, {imageData});
+					});
+				} else if (!value && snapState != "idle") {
+					// Reset if the value for snapRequested is empty
+					updateState({ snapState: "idle" });
+				}
+			},
+			enabled: () => {
+				toggleTracks({ video, enabled: value });
+				updateState({ snapState: "idle" });
+			}
+		};
+
+		if (propertyHandlers[name]) {
+			propertyHandlers[name]();
+		}
+	},	
 };
 
 const dispatches = {}; // Events that will be dispatched by this component

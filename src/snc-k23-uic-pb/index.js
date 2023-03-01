@@ -1,7 +1,8 @@
 import { createCustomElement } from "@servicenow/ui-core";
 import snabbdom from "@servicenow/ui-renderer-snabbdom";
 import styles from "./styles.scss";
-import { selectMediaDevice } from "./media";
+import { selectMediaDevice, toggleTracks, snap, initializeCanvas } from "./media";
+import { PHOTOBOOTH_CAMERA_SNAPPED } from "./events";
 import { actionTypes } from "@servicenow/ui-core";
 
 const { COMPONENT_CONNECTED, COMPONENT_PROPERTY_CHANGED, COMPONENT_DOM_READY } =
@@ -21,14 +22,16 @@ const initializeMedia = ({
 	const canvas = host.shadowRoot.ownerDocument.createElement("canvas");
 	const context = canvas.getContext("2d");
 
+	initializeCanvas({context, fillStyle : "gray"});
+	// Get access to the camera!
+	selectMediaDevice({enabled, video});
+
 	// We will need these later when taking snapshots
 	updateState({
 		video,
 		context
 	});
-
-	// Get access to the camera!
-	selectMediaDevice({enabled, video});
+	
 };
 
 const view = (state, { updateState }) => {
@@ -47,15 +50,14 @@ const actionHandlers = {
 		host,
 		state: { properties },
 		updateState,
-		dispatch,
 	}) => {
-		initializeMedia({ host, properties, dispatch, updateState });
+		initializeMedia({ host, properties, updateState });
 	}
 };
 
 const dispatches = {}; // Events that will be dispatched by this component
 
-const properties = {
+export const properties = {
 	/**
 	 * Camera is enabled
 	 * @type {boolean}
@@ -64,6 +66,7 @@ const properties = {
 		schema: { type: "boolean" },
 		default: true,
 	},
+
 	/**
 	 * Triggers a snapshot
 	 * Required: No
@@ -72,7 +75,15 @@ const properties = {
 		default: "",
 		schema: { type: "string" },
 	},
-}; 
+
+	/**
+	 * How long to wait after requesting a snap and beginning the shots.
+	 */
+	countdownDurationSeconds: {
+		default: 0,
+		schema: { type: "number" },
+	},
+};
 
 createCustomElement("snc-k23-uic-pb", {
 	renderer: { type: snabbdom },

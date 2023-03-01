@@ -1,38 +1,3 @@
-<<<<<<< HEAD
-export function selectMediaDevice({
-=======
-<<<<<<< HEAD
-export function switchMediaDevice({
->>>>>>> c7f7100 (Updating media.js to include the "snap" function and broke "events.js" out into separate file to be used by both index.js and element.js.)
-	video,
-	cameraDeviceId = "",
-	enabled
-}) {
-	console.log("SWITCH MEDIA DEVICE", { cameraDeviceId, enabled });
-	// Get access to the camera!
-	return new Promise((resolve, reject) => {
-        navigator.mediaDevices
-		.getUserMedia({ video: { deviceId: cameraDeviceId } })
-		.then(function (stream) {
-			console.log("Got User Media!", { video, cameraDeviceId });
-			if (video.srcObject) {
-				video.srcObject.getTracks().forEach((track) => {
-					track.stop();
-				});
-			}
-			video.srcObject = stream;
-			toggleTracks({ video, enabled });
-			video.play();
-            resolve();
-		})
-		.catch((exc) => {
-			console.log("Error Getting Media!", exc);
-			reject({exc});
-		});
-<<<<<<< HEAD
-    });
-=======
-=======
 export function selectMediaDevice({ video, cameraDeviceId = "", enabled }) {
 	console.log("SWITCH MEDIA DEVICE", { cameraDeviceId, enabled });
 	// Get access to the camera!
@@ -56,8 +21,6 @@ export function selectMediaDevice({ video, cameraDeviceId = "", enabled }) {
 				reject({ exc });
 			});
 	});
->>>>>>> 3bef86c (Updating media.js to include the "snap" function and broke "events.js" out into separate file to be used by both index.js and element.js.)
->>>>>>> c7f7100 (Updating media.js to include the "snap" function and broke "events.js" out into separate file to be used by both index.js and element.js.)
 }
 
 export function toggleTracks({ video: { srcObject: stream }, enabled }) {
@@ -101,11 +64,6 @@ export function getConnectedDevices({
 	});
 }
 
-<<<<<<< HEAD
-export function initializeCanvas({context, imageSize = { width: 800, height: 600}, gap = 10, chin = 50, fillStyle}){
-	const {canvas} = context;
-    // Add room for gaps above, between and below images
-=======
 export function initializeCanvas({
 	context,
 	imageSize = { width: 800, height: 600 },
@@ -114,7 +72,6 @@ export function initializeCanvas({
 	const { canvas } = context;
 	console.log("Initialize Canvas", canvas, imageSize, fillStyle);
 	// Add room for gaps above, between and below images
->>>>>>> c7f7100 (Updating media.js to include the "snap" function and broke "events.js" out into separate file to be used by both index.js and element.js.)
 	canvas.width = imageSize.width;
 	canvas.height = imageSize.height;
 
@@ -122,19 +79,6 @@ export function initializeCanvas({
 	context.fillRect(0, 0, canvas.width, canvas.height);
 }
 
-<<<<<<< HEAD
-export function drawImage({
-	pos,
-	context,
-	video,
-	gap,
-	chin
-}) {
-	const { canvas : {width, height} } = context;
-	// Make the shots slightly smaller to accomodate the gap/chin
-	const hWidth = (width / 2) - ((gap * 3) / 2);
-	const hHeight = ((height - chin) / 2) - (gap * 2);
-=======
 export function drawImage({ pos, context, video, gap, chin }) {
 	const {
 		canvas: { width, height },
@@ -142,7 +86,6 @@ export function drawImage({ pos, context, video, gap, chin }) {
 	// Make the shots slightly smaller to accomodate the gap/chin
 	const hWidth = (width / 2) - (gap * 3) / 2;
 	const hHeight = ((height - chin) / 2) - (gap * 3) / 2;
->>>>>>> c7f7100 (Updating media.js to include the "snap" function and broke "events.js" out into separate file to be used by both index.js and element.js.)
 
 	// Define where the first, second, third and fourth images appear
 	// in the grid, taking into account offsets from the gap

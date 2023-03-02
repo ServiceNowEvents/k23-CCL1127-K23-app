@@ -1,5 +1,5 @@
 export function selectMediaDevice({ video, cameraDeviceId = "", enabled }) {
-	console.log("SWITCH MEDIA DEVICE", { cameraDeviceId, enabled });
+	console.log("SELECT MEDIA DEVICE", { cameraDeviceId, enabled });
 	// Get access to the camera!
 	return new Promise((resolve, reject) => {
 		navigator.mediaDevices
@@ -79,7 +79,7 @@ export function initializeCanvas({
 	context.fillRect(0, 0, canvas.width, canvas.height);
 }
 
-export function drawImage({ pos, context, video, gap, chin }) {
+export function drawImage({ pos, context, video, gap = 10, chin = 0 }) {
 	const {
 		canvas: { width, height },
 	} = context;
@@ -104,17 +104,17 @@ export function drawImage({ pos, context, video, gap, chin }) {
 // Passing in "state" instead of destructuring it in place
 // becuase drawImage needs a lot of values from state
 // and I don't want to have to call them out twice
-export function snap({ state, updateState }) {
+export function snap({ state, updateState, onIndividualSnap }) {
 	const {
 		video,
 		context,
 		shutterSound,
 		properties: {
-			countdownDurationSeconds = 0,
+			countdownDurationSeconds,
 			pauseDurationSeconds = 1,
 			pauseDurationMilliseconds = pauseDurationSeconds * 1000,
-			gap = 10,
-			chin = 0,
+			gap,
+			chin
 		},
 	} = state;
 
@@ -126,12 +126,18 @@ export function snap({ state, updateState }) {
 
 	return new Promise((resolve) => {
 		const _snap = () => {
+			console.log("_snap", pos, context);
 			updateState({ snapState: "snapping" });
 
 			drawImage({ pos, context, video, gap, chin });
 
-			if(shutterSound) {
+			if(shutterSound){
 				shutterSound.play();
+			}
+
+			if(onIndividualSnap){
+				const imageData = context.canvas.toDataURL("image/jpeg");
+				onIndividualSnap({imageData});
 			}
 
 			if (pos < 4) {
@@ -140,7 +146,7 @@ export function snap({ state, updateState }) {
 			} else {
 				updateState({ snapState: "preview" });
 
-				resolve({ context });
+				resolve({context});
 			}
 		};
 

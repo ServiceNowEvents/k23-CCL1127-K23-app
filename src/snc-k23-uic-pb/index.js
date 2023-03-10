@@ -82,6 +82,15 @@ export const properties = {
 		default: 0,
 		schema: { type: "number" },
 	},
+
+	/**
+	 * The html fillStyle property for the canvas, e.g. "green"
+	 * Required: No
+	 */
+	fillStyle: {
+		default: "lightgreen",
+		schema: { type: "string" },
+	},
 };
 
 createCustomElement("snc-k23-uic-pb", {

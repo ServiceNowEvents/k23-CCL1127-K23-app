@@ -66,7 +66,7 @@ export function getConnectedDevices({
 };
 
 function initializeCanvas(context, {
-	imageSize : { width = 800, height = 600 },
+	imageSize : { width, height },
 	fillStyle = null,
 }) {
 	context.canvas.width = width;
@@ -76,7 +76,7 @@ function initializeCanvas(context, {
 	context.fillRect(0, 0, width, height);
 }
 
-function drawToSnapImage({ pos, context, video, gap = 10, chin = 0 }) {
+function drawToSnapImage({ pos, context, video, gap, chin }) {
 	console.log("drawToSnapImage", {context})
 
 	const {width, height} = context.canvas;
@@ -117,13 +117,14 @@ export function snap({ state, updateState }) {
 			countdownDurationSeconds,
 			pauseDurationSeconds = 1,
 			pauseDurationMilliseconds = pauseDurationSeconds * 1000,
-			gap = 0,
+			gap = 10,
 			chin = 0,
 			imageSize = {width : 800, height : 600},
 			fillStyle
 		},
 	} = state;
 
+	debugger;
 	const NUMBER_OF_SNAPS = 4;
 	const singleSnapContexts = [];
 	let pos = 1;

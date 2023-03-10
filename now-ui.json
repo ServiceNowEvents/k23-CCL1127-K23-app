@@ -39,6 +39,18 @@
 						"type" : "number"
 					}
 				}
+			},
+			{
+				"name": "fillStyle",
+				"label": "Fill Style",
+				"defaultValue": "",
+				"description": "The html fillStyle property for the canvas, e.g. 'green'",
+				"fieldType": "string",
+				"typeMetadata": {
+					"schema": {
+						"type": "string"
+					}
+				}
 			}],
 			"actions": [{
 					"action": "PHOTO_BOOTH_CAMERA#SNAPPED",

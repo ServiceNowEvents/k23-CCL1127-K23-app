@@ -1,7 +1,7 @@
 import { createCustomElement } from "@servicenow/ui-core";
 import snabbdom from "@servicenow/ui-renderer-snabbdom";
 import styles from "./styles.scss";
-import { selectMediaDevice, toggleTracks, snap, initializeCanvas } from "./media";
+import { selectMediaDevice, toggleTracks, snap } from "./media";
 import { actionTypes } from "@servicenow/ui-core";
 
 const { COMPONENT_CONNECTED, COMPONENT_PROPERTY_CHANGED, COMPONENT_DOM_READY } =

@@ -22,7 +22,6 @@ const initializeMedia = ({
 	const canvas = host.shadowRoot.ownerDocument.createElement("canvas");
 	const context = canvas.getContext("2d");
 
-	initializeCanvas({context, fillStyle : "gray"});
 	// Get access to the camera!
 	selectMediaDevice({enabled, video});
 

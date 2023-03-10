@@ -1,7 +1,7 @@
 import { createCustomElement } from "@servicenow/ui-core";
 import snabbdom from "@servicenow/ui-renderer-snabbdom";
 import styles from "./styles.scss";
-import { selectMediaDevice, toggleTracks, snap, initializeCanvas } from "./media";
+import { selectMediaDevice, toggleTracks, snap } from "./media";
 import { PHOTOBOOTH_CAMERA_SNAPPED } from "./events";
 import { actionTypes } from "@servicenow/ui-core";
 

@@ -1,8 +1,9 @@
 import { createCustomElement } from "@servicenow/ui-core";
 import snabbdom from "@servicenow/ui-renderer-snabbdom";
 import styles from "./styles.scss";
-import { selectMediaDevice, toggleTracks, snap } from "./media";
-import { PHOTOBOOTH_CAMERA_SNAPPED } from "./events";
+import { properties } from "./properties";
+import { selectMediaDevice, toggleTracks, snap, getConnectedDevices } from "./media";
+import { PHOTOBOOTH_CAMERA_SNAPPED, PHOTOBOOTH_AVAILABLE_CAMERAS_UPDATED } from "./events";
 import { actionTypes } from "@servicenow/ui-core";
 
 const { COMPONENT_CONNECTED, COMPONENT_PROPERTY_CHANGED, COMPONENT_DOM_READY } =
@@ -11,7 +12,8 @@ const { COMPONENT_CONNECTED, COMPONENT_PROPERTY_CHANGED, COMPONENT_DOM_READY } =
 const initializeMedia = ({
 	host,
 	updateState,
-	properties: { enabled },
+	properties: { enabled, cameraDeviceId },
+	dispatch
 }) => {
 	console.log("Initialize Media");
 
@@ -22,8 +24,11 @@ const initializeMedia = ({
 	const canvas = host.shadowRoot.ownerDocument.createElement("canvas");
 	const context = canvas.getContext("2d");
 
-	// Get access to the camera!
-	selectMediaDevice({enabled, video});
+	selectMediaDevice({ video, cameraDeviceId, enabled });
+
+	getConnectedDevices({ cameraDeviceId }).then((cameras) => {
+		dispatch(PHOTOBOOTH_AVAILABLE_CAMERAS_UPDATED, cameras);
+	});
 
 	// We will need these later when taking snapshots
 	updateState({
@@ -49,8 +54,9 @@ const actionHandlers = {
 		host,
 		state: { properties },
 		updateState,
+		dispatch
 	}) => {
-		initializeMedia({ host, properties, updateState });
+		initializeMedia({ host, properties, updateState, dispatch });
 	},
 
 	[COMPONENT_PROPERTY_CHANGED]: ({
@@ -83,6 +89,14 @@ const actionHandlers = {
 			enabled: () => {
 				toggleTracks({ video, enabled: value });
 				updateState({ snapState: "idle" });
+			},
+			cameraDeviceId: () => {
+				const cameraDeviceId = value;
+				selectMediaDevice({
+					video,
+					cameraDeviceId,
+				});
+				updateState({ cameraDeviceId });
 			}
 		};
 
@@ -94,42 +108,7 @@ const actionHandlers = {
 
 const dispatches = {}; // Events that will be dispatched by this component
 
-export const properties = {
-	/**
-	 * Camera is enabled
-	 * @type {boolean}
-	 */
-	enabled: {
-		schema: { type: "boolean" },
-		default: true,
-	},
-
-	/**
-	 * Triggers a snapshot
-	 * Required: No
-	 */
-	snapRequested: {
-		default: "",
-		schema: { type: "string" },
-	},
-
-	/**
-	 * How long to wait after requesting a snap and beginning the shots.
-	 */
-	countdownDurationSeconds: {
-		default: 0,
-		schema: { type: "number" },
-	},
-	
-	/**
-	 * The html fillStyle property for the canvas, e.g. "green"
-	 * Required: No
-	 */
-	fillStyle: {
-		default: "lightgreen",
-		schema: { type: "string" },
-	},
-};
+console.log("PROPERTIES IMPORTED", properties);
 
 createCustomElement("snc-k23-uic-pb", {
 	renderer: { type: snabbdom },

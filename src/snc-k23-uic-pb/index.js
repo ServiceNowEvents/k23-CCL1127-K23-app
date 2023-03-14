@@ -84,6 +84,14 @@ export const properties = {
 	},
 
 	/**
+	 * Number of seconds to pause between each snap.
+	 */
+	pauseDurationSeconds: {
+		default: 1,
+		schema: { type: "number" },
+	},
+
+	/**
 	 * The html fillStyle property for the canvas, e.g. "green"
 	 * Required: No
 	 */

@@ -63,6 +63,7 @@ const view = (state, { updateState }) => {
 				<button on-click={() => updateState({ enabled: !enabled })}>
 					Toggle Enabled
 				</button>
+                Countdown Seconds: 
 				<input
 					type="number"
 					style={{ width: "2rem" }}

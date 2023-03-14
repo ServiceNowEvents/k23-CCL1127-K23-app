@@ -38,10 +38,23 @@ const initializeMedia = ({
 	
 };
 
-const view = (state, { updateState }) => {
+const view = ({
+	snapState,
+	properties: {
+		pauseDurationSeconds,
+		animationDuration = pauseDurationSeconds + "s",
+	},
+}) => {
 	return (
-		<div>
-			<video id="video" autoplay="" style={{ width: "800px" }}></video>
+		<div id="container" className={snapState}>
+			<div
+				id="flash"
+				style={{
+					"animation-iteration-count": 4,
+					"animation-duration": animationDuration,
+				}}
+			></div>
+			<video id="video" autoplay="" style={{ width: "100%" }}></video>
 		</div>
 	);
 };
@@ -69,26 +82,19 @@ const actionHandlers = {
 	}) => {
 		console.log(COMPONENT_PROPERTY_CHANGED, { name, value });
 		const {
-			snapState,
 			video,
 		} = state;
 
 		const propertyHandlers = {
 			snapRequested: () => {
-				if (value && value != previousValue) {
-					snap({ state, updateState }).then(({context}) => {
-						console.log("SNAP COMPLETED", context);
-						const imageData = context.canvas.toDataURL("image/jpeg");
-						dispatch(PHOTOBOOTH_CAMERA_SNAPPED, {imageData});
-					});
-				} else if (!value && snapState != "idle") {
-					// Reset if the value for snapRequested is empty
-					updateState({ snapState: "idle" });
-				}
+				snap({ state, updateState }).then(({context}) => {
+					console.log("SNAP COMPLETED", context);
+					const imageData = context.canvas.toDataURL("image/jpeg");
+					dispatch(PHOTOBOOTH_CAMERA_SNAPPED, {imageData});
+				});
 			},
 			enabled: () => {
 				toggleTracks({ video, enabled: value });
-				updateState({ snapState: "idle" });
 			},
 			cameraDeviceId: () => {
 				const cameraDeviceId = value;
@@ -107,8 +113,6 @@ const actionHandlers = {
 };
 
 const dispatches = {}; // Events that will be dispatched by this component
-
-console.log("PROPERTIES IMPORTED", properties);
 
 createCustomElement("snc-k23-uic-pb", {
 	renderer: { type: snabbdom },

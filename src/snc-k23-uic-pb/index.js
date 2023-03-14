@@ -33,15 +33,28 @@ const initializeMedia = ({
 	
 };
 
-const view = (state, { updateState }) => {
+const view = ({
+	snapState,
+	properties: {
+		pauseDurationSeconds,
+		animationDuration = pauseDurationSeconds + "s",
+	},
+}) => {
 	return (
-		<div>
-			<video id="video" autoplay="" style={{ width: "800px" }}></video>
+		<div id="container" className={snapState}>
+			<div
+				id="flash"
+				style={{
+					"animation-iteration-count": 4,
+					"animation-duration": animationDuration,
+				}}
+			></div>
+			<video id="video" autoplay="" style={{ width: "100%" }}></video>
 		</div>
 	);
 };
 
-const initialState = {}; // Pre-set "state" variables
+const initialState = { snapState : "idle" }; // Pre-set "state" variables
 
 // Events that will be handled by this component
 const actionHandlers = {
@@ -75,14 +88,10 @@ const actionHandlers = {
 						const imageData = context.canvas.toDataURL("image/jpeg");
 						dispatch(PHOTOBOOTH_CAMERA_SNAPPED, {imageData});
 					});
-				} else if (!value && snapState != "idle") {
-					// Reset if the value for snapRequested is empty
-					updateState({ snapState: "idle" });
-				}
+				} 
 			},
 			enabled: () => {
 				toggleTracks({ video, enabled: value });
-				updateState({ snapState: "idle" });
 			}
 		};
 
@@ -118,6 +127,14 @@ export const properties = {
 	 */
 	countdownDurationSeconds: {
 		default: 0,
+		schema: { type: "number" },
+	},
+
+	/**
+	 * Number of seconds to pause between each snap.
+	 */
+	pauseDurationSeconds: {
+		default: 1,
 		schema: { type: "number" },
 	},
 

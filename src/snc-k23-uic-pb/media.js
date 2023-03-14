@@ -166,7 +166,7 @@ export function snap({ state, updateState }) {
 				pos++;
 				setTimeout(_snap, pauseDurationMilliseconds);
 			} else {
-				updateState({ snapState: "preview" });
+				updateState({ snapState: "idle" });
 
 				resolve({context, singleSnapContexts});
 			}

@@ -3,18 +3,12 @@ import snabbdom from "@servicenow/ui-renderer-snabbdom";
 import { PHOTOBOOTH_CAMERA_SNAPPED } from "../src/snc-k23-uic-pb/events";
 import '../src/snc-k23-uic-pb';
 
-// The state is provided by the UX Framework when running inside
-// a UIB page.  We will just keep a local reference to the 
-// "updateState" method for use in this test page
-let localUpdateState = null;
-
 const initialState = {
     // TODO: Add the starting values to initialize the component
     enabled: true
 };
 
 const view = (state, { updateState }) => {
-	localUpdateState = updateState;
 	console.log("ELEMENT VIEW");
 	console.log(state);
 	const {
@@ -65,7 +59,7 @@ const actionHandlers = {
             },
         }) => {
             console.log("PHOTOBOOTH CAMERA SNAPPED YO!", state, imageData);
-            localUpdateState({ imageData });
+            updateState({ imageData });
         },
     }
 };

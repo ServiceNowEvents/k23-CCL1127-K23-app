@@ -49,7 +49,7 @@ const view = ({
 					"animation-duration": animationDuration,
 				}}
 			></div>
-			<video id="video" autoplay="" style={{ width: "100%" }}></video>
+			<video id="video" autoplay="" style={{ width: "800px" }}></video>
 		</div>
 	);
 };
@@ -76,19 +76,16 @@ const actionHandlers = {
 	}) => {
 		console.log(COMPONENT_PROPERTY_CHANGED, { name, value });
 		const {
-			snapState,
 			video,
 		} = state;
 
 		const propertyHandlers = {
 			snapRequested: () => {
-				if (value && value != previousValue) {
-					snap({ state, updateState }).then(({context}) => {
-						console.log("SNAP COMPLETED", context);
-						const imageData = context.canvas.toDataURL("image/jpeg");
-						dispatch(PHOTOBOOTH_CAMERA_SNAPPED, {imageData});
-					});
-				} 
+				snap({ state, updateState }).then(({context}) => {
+					console.log("SNAP COMPLETED", context);
+					const imageData = context.canvas.toDataURL("image/jpeg");
+					dispatch(PHOTOBOOTH_CAMERA_SNAPPED, {imageData});
+				});
 			},
 			enabled: () => {
 				toggleTracks({ video, enabled: value });

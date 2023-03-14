@@ -1,1 +1,70 @@
-@import '@servicenow/sass-kit/host';
+@import "@servicenow/sass-kit/host";
+
+@keyframes flasher {
+  0% {
+    background-color: #FFF;
+  }
+
+  25% {
+    background-color: #FFF;
+  }
+
+  100% {
+    background-color: none;
+  }
+}
+
+
+#flash {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index:1000;
+}
+
+.snapping #flash {
+  display: default;
+  animation: flasher;
+}
+
+#container {
+  position: relative;
+
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+
+  div {
+    position: absolute;
+  }
+}
+
+/* Waiting to take the snapshot */
+.idle {
+  #flash, #counter {
+    display: none;
+  }
+}
+
+/* State while countdown is rendering */
+.countdown {
+  #flash, #counter {
+    display: none;
+  }
+}
+
+/* State while taking the snapshot */
+.snapping {
+  #flash, #counter {
+    display: default;
+  }
+}
+
+/* State when you are previewing the results of the snapshot */
+.preview {
+  #counter {
+    display: none;
+  }
+}

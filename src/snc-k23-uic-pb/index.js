@@ -54,7 +54,7 @@ const view = ({
 					"animation-duration": animationDuration,
 				}}
 			></div>
-			<video id="video" autoplay="" style={{ width: "100%" }}></video>
+			<video id="video" autoplay="" style={{ width: "800px" }}></video>
 		</div>
 	);
 };

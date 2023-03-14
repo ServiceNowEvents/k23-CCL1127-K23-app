@@ -124,7 +124,6 @@ export function snap({ state, updateState }) {
 		},
 	} = state;
 
-	debugger;
 	const NUMBER_OF_SNAPS = 4;
 	const singleSnapContexts = [];
 	let pos = 1;
@@ -167,7 +166,7 @@ export function snap({ state, updateState }) {
 				pos++;
 				setTimeout(_snap, pauseDurationMilliseconds);
 			} else {
-				updateState({ snapState: "preview" });
+				updateState({ snapState: "idle" });
 
 				resolve({context, singleSnapContexts});
 			}

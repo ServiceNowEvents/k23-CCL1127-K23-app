@@ -20,5 +20,5 @@ git checkout exercise_1
 
 Use the following command to switch branches.  Start with exercise_0.
 ```
-git checkout exercise_0
+git checkout exercise_0 -f
 ```

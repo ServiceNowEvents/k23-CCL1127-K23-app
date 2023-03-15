@@ -5,7 +5,7 @@ Abstract: In part 1 of this two-part lab series, use the ServiceNow Command Line
 # Branches
 The branches are setup with **main** containing the completed lab and branches for each exercise that represents the state of that exercise *at completion*.  This can be used to catch you up.  E.g., if you are unable to complete exercise 1 you may use a GIT command like the following to retrieve the completed exercise to begin dev on Exercise 2.  
 ```
-git checkout exercise_1
+git checkout exercise_1 -f
 ```
 
 ## Branches

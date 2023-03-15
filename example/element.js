@@ -38,7 +38,6 @@ const view = (state, { updateState }) => {
                     ></snc-k23-uic-pb>
 				</div>
 				<div id="outputs" style={{ flex: 1 }}>
-                    <img src={imageData}/>
 				</div>
 			</div>
 			<div id="controls">
@@ -50,19 +49,7 @@ const view = (state, { updateState }) => {
 	);
 };
 
-const actionHandlers = {
-    [PHOTOBOOTH_CAMERA_SNAPPED]: {
-        effect: ({
-            state,
-            action: {
-                payload: { imageData },
-            },
-        }) => {
-            console.log("PHOTOBOOTH CAMERA SNAPPED YO!", state, imageData);
-            updateState({ imageData });
-        },
-    }
-};
+const actionHandlers = {};
 
 createCustomElement("example-element", {
 	initialState,

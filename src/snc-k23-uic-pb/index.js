@@ -51,6 +51,31 @@ const actionHandlers = {
 		updateState,
 	}) => {
 		initializeMedia({ host, properties, updateState });
+	},
+
+	[COMPONENT_PROPERTY_CHANGED]: ({
+		state,
+		action: {
+			payload: { name, value, previousValue },
+		},
+		dispatch,
+		updateState,
+	}) => {
+		console.log(COMPONENT_PROPERTY_CHANGED, { name, value });
+		const {
+			snapState,
+			video,
+		} = state;
+
+		const propertyHandlers = {
+			enabled: () => {
+				toggleTracks({ video, enabled: value });
+			}
+		};
+
+		if (propertyHandlers[name]) {
+			propertyHandlers[name]();
+		}
 	}
 };
 

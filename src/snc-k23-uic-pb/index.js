@@ -7,9 +7,9 @@ import { actionTypes } from "@servicenow/ui-core";
 const { COMPONENT_CONNECTED, COMPONENT_PROPERTY_CHANGED, COMPONENT_DOM_READY } =
 	actionTypes;
 
-const initializeMedia = ({ 
-	host, 
-	updateState, 
+const initializeMedia = ({
+	host,
+	updateState,
 	properties: { enabled },
 }) => {
 	console.log("Initialize Media");

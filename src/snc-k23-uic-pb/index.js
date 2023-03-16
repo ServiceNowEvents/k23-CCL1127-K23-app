@@ -23,14 +23,14 @@ const initializeMedia = ({
 	const context = canvas.getContext("2d");
 
 	// Get access to the camera!
-	selectMediaDevice({enabled, video});
+	selectMediaDevice({ enabled, video });
 
 	// We will need these later when taking snapshots
 	updateState({
 		video,
 		context
 	});
-	
+
 };
 
 const view = ({
@@ -54,7 +54,7 @@ const view = ({
 	);
 };
 
-const initialState = { snapState : "idle" }; // Pre-set "state" variables
+const initialState = { snapState: "idle" }; // Pre-set "state" variables
 
 // Events that will be handled by this component
 const actionHandlers = {
@@ -81,10 +81,10 @@ const actionHandlers = {
 
 		const propertyHandlers = {
 			snapRequested: () => {
-				snap({ state, updateState }).then(({context}) => {
+				snap({ state, updateState }).then(({ context }) => {
 					console.log("SNAP COMPLETED", context);
 					const imageData = context.canvas.toDataURL("image/jpeg");
-					dispatch(PHOTOBOOTH_CAMERA_SNAPPED, {imageData});
+					dispatch(PHOTOBOOTH_CAMERA_SNAPPED, { imageData });
 				});
 			},
 			enabled: () => {
@@ -95,7 +95,7 @@ const actionHandlers = {
 		if (propertyHandlers[name]) {
 			propertyHandlers[name]();
 		}
-	},	
+	},
 };
 
 const dispatches = {}; // Events that will be dispatched by this component

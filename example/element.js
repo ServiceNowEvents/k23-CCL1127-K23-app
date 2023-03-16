@@ -15,7 +15,7 @@ const initialState = {
 	// TODO: Add the starting values to initialize the component
 	enabled: true,
 	cameras: [], // Init so that the html binding doesn't break
-    countdownDurationSeconds : 0
+	countdownDurationSeconds: 0
 };
 
 const view = (state, { updateState }) => {
@@ -63,7 +63,7 @@ const view = (state, { updateState }) => {
 				<button on-click={() => updateState({ enabled: !enabled })}>
 					Toggle Enabled
 				</button>
-                Countdown Seconds: 
+				Countdown Seconds:
 				<input
 					type="number"
 					style={{ width: "2rem" }}

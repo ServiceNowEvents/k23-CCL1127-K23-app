@@ -23,14 +23,14 @@ const initializeMedia = ({
 	const context = canvas.getContext("2d");
 
 	// Get access to the camera!
-	selectMediaDevice({enabled, video});
+	selectMediaDevice({ enabled, video });
 
 	// We will need these later when taking snapshots
 	updateState({
 		video,
 		context
 	});
-	
+
 };
 
 const view = (state, { updateState }) => {

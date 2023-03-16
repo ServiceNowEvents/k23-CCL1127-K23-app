@@ -41,6 +41,18 @@
 				}
 			},
 			{
+				"name": "pauseDurationSeconds",
+				"label": "Pause Duration Seconds",
+				"defaultValue": 1,
+				"description": "Number of seconds to wait between each shot",
+				"fieldType": "integer",
+				"typeMetadata" : {
+					"schema" : {
+						"type" : "number"
+					}
+				}
+			},
+			{
 				"name": "fillStyle",
 				"label": "Fill Style",
 				"defaultValue": "",

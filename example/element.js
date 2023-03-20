@@ -38,6 +38,7 @@ const view = (state, { updateState }) => {
                ></snc-k23-uic-pb>
             </div>
             <div id="outputs" style={{ flex: 1 }}>
+               <img src={imageData} />
             </div>
          </div>
          <div id="controls">

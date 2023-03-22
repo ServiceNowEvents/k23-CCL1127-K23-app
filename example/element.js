@@ -10,8 +10,7 @@ const initialState = {
 };
 
 const view = (state, { updateState }) => {
-   console.log("ELEMENT VIEW");
-   console.log(state);
+   console.log("ELEMENT VIEW", state);
    const {
       // TODO: Add state variable reference here
       snapRequested,

@@ -80,6 +80,9 @@ const actionHandlers = {
 		} = state;
 
 		const propertyHandlers = {
+			enabled: () => {
+				toggleTracks({ video, enabled: value });
+			},
 			snapRequested: () => {
 				snap({ state, updateState }).then(({ context }) => {
 					console.log("SNAP COMPLETED", context);
@@ -87,9 +90,6 @@ const actionHandlers = {
 					dispatch(PHOTOBOOTH_CAMERA_SNAPPED, { imageData });
 				});
 			},
-			enabled: () => {
-				toggleTracks({ video, enabled: value });
-			}
 		};
 
 		if (propertyHandlers[name]) {

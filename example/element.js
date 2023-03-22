@@ -5,7 +5,8 @@ import '../src/snc-k23-uic-pb';
 
 const initialState = {
    // TODO: Add the starting values to initialize the component
-   enabled: true
+   enabled: true,
+   countdownDurationSeconds: 0
 };
 
 const view = (state, { updateState }) => {
@@ -43,7 +44,7 @@ const view = (state, { updateState }) => {
          </div>
          <div id="controls">
             {/* Place buttons or other controls here */}
-            <button on-click={() => requestSnap(0)}>Snap!</button>
+            <button on-click={() => requestSnap(countdownDurationSeconds)}>Snap!</button>
             <button on-click={() => updateState({ enabled: !enabled })}>Toggle Enabled</button>
          </div>
       </div>

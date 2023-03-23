@@ -14,7 +14,7 @@ export function selectMediaDevice({ video, cameraDeviceId = "", enabled }) {
 				video.srcObject = stream;
 				toggleTracks({ video, enabled });
 				video.play();
-				resolve();
+				resolve(stream);
 			})
 			.catch((exc) => {
 				console.log("Error Getting Media!", exc);
@@ -34,9 +34,9 @@ export function getConnectedDevices({
 	deviceType = "videoinput",
 	cameraDeviceId,
 }) {
-	// This is done purely to return a list of devices to the client so that they can
-	// offer a selection to the user. It does not impact initializing the camera functionality.
 	return new Promise((resolver) => {
+		// This is done purely to return a list of devices to the client so that they can
+		// offer a selection to the user. It does not impact initializing the camera functionality.
 		navigator.mediaDevices.enumerateDevices().then((devices) => {
 			const cameras = devices.filter((device) => device.kind === deviceType);
 			cameras.forEach((camera) => (camera.id = camera.deviceId));
@@ -66,7 +66,7 @@ export function getConnectedDevices({
 };
 
 function initializeCanvas(context, {
-	imageSize : { width, height },
+	imageSize: { width, height },
 	fillStyle = null,
 }) {
 	context.canvas.width = width;
@@ -77,10 +77,10 @@ function initializeCanvas(context, {
 }
 
 function drawToSnapImage({ pos, context, video, gap, chin }) {
-	console.log("drawToSnapImage", {context})
+	console.log("drawToSnapImage", { context })
 
-	const {width, height} = context.canvas;
-	
+	const { width, height } = context.canvas;
+
 	// Subtract out gap and chin to make image size proportional
 	const hWidth = ((width - (gap * 3)) / 2);
 	const hHeight = ((height - (gap * 3) - chin) / 2);
@@ -96,12 +96,12 @@ function drawToSnapImage({ pos, context, video, gap, chin }) {
 
 	const { x, y } = posMap[pos];
 
-	drawImage(context, video, {x, y, width : hWidth, height : hHeight})
+	drawImage(context, video, { x, y, width: hWidth, height: hHeight })
 
 	return { context };
 }
 
-function drawImage(context, video, {x = 0, y = 0, width, height}){
+function drawImage(context, video, { x = 0, y = 0, width, height }) {
 	context.drawImage(video, x, y, width, height);
 }
 
@@ -119,7 +119,7 @@ export function snap({ state, updateState }) {
 			pauseDurationMilliseconds = pauseDurationSeconds * 1000,
 			gap = 10,
 			chin = 0,
-			imageSize = {width : 800, height : 600},
+			imageSize = { width: 800, height: 600 },
 			fillStyle
 		},
 	} = state;
@@ -128,8 +128,8 @@ export function snap({ state, updateState }) {
 	const singleSnapContexts = [];
 	let pos = 1;
 
-	const mainCanvasSize = { width : (imageSize.width + (gap * 3)), height : (imageSize.height + (gap * 3) + chin)};
-	initializeCanvas(context, {imageSize : mainCanvasSize, fillStyle});
+	const mainCanvasSize = { width: (imageSize.width + (gap * 3)), height: (imageSize.height + (gap * 3) + chin) };
+	initializeCanvas(context, { imageSize: mainCanvasSize, fillStyle });
 
 	if (countdownDurationSeconds > 0) {
 		updateState({ snapState: "countdown" });
@@ -137,15 +137,15 @@ export function snap({ state, updateState }) {
 
 	// Initialize the snap contexts to return for the single snaps in advance
 	// Man, I haven't done a for loop like this in years!
-	for(let i=0; i<NUMBER_OF_SNAPS; i++){
+	for (let i = 0; i < NUMBER_OF_SNAPS; i++) {
 		const singleSnapContext = context.canvas.ownerDocument.createElement("canvas").getContext("2d");
-		initializeCanvas(singleSnapContext, {imageSize});
+		initializeCanvas(singleSnapContext, { imageSize });
 		singleSnapContexts.push(singleSnapContext);
 	}
 
 
 	return new Promise((resolve) => {
-	
+
 		const _snap = () => {
 			console.log("_snap", pos, context);
 			updateState({ snapState: "snapping" });
@@ -153,22 +153,22 @@ export function snap({ state, updateState }) {
 
 			// Draw the primary 2x2 result to the main context
 			drawToSnapImage({ pos, context, video, gap, chin });
-		
-			const singleSnapContext = singleSnapContexts[pos-1];
+
+			const singleSnapContext = singleSnapContexts[pos - 1];
 			// Draw the individual image full-sized
 			drawImage(singleSnapContext, video, imageSize);
 
-			if(shutterSound){
+			if (shutterSound) {
 				shutterSound.play();
 			}
 
 			if (pos < NUMBER_OF_SNAPS) {
-				pos++;
+				pos++
 				setTimeout(_snap, pauseDurationMilliseconds);
 			} else {
 				updateState({ snapState: "idle" });
 
-				resolve({context, singleSnapContexts});
+				resolve({ context, singleSnapContexts });
 			}
 		};
 

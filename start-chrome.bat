@@ -1,0 +1,1 @@
+start "Chrome with Camera Mock" "C:\Program Files\Google\Chrome\Application\chrome.exe" --use-fake-device-for-media-stream

@@ -3,9 +3,8 @@ export function selectMediaDevice({ video, cameraDeviceId = "", enabled }) {
 	// Get access to the camera!
 	return new Promise((resolve, reject) => {
 		navigator.mediaDevices
-			.getUserMedia({ video: { deviceId: cameraDeviceId } })
-			.then(function (stream) {
-				console.log("Got User Media!", { video, cameraDeviceId });
+			.getUserMedia({ video: { deviceId: cameraDeviceId } }).then((stream) => {
+				console.log("Got User Media!", { video, cameraDeviceId, stream });
 				if (video.srcObject) {
 					video.srcObject.getTracks().forEach((track) => {
 						track.stop();
@@ -150,6 +149,10 @@ export function snap({ state, updateState }) {
 			console.log("_snap", pos, context);
 			updateState({ snapState: "snapping" });
 
+			if (shutterSound) {
+				console.log("SHUTTER SOUND!");
+				shutterSound.play();
+			}
 
 			// Draw the primary 2x2 result to the main context
 			drawToSnapImage({ pos, context, video, gap, chin });
@@ -157,10 +160,6 @@ export function snap({ state, updateState }) {
 			const singleSnapContext = singleSnapContexts[pos - 1];
 			// Draw the individual image full-sized
 			drawImage(singleSnapContext, video, imageSize);
-
-			if (shutterSound) {
-				shutterSound.play();
-			}
 
 			if (pos < NUMBER_OF_SNAPS) {
 				pos++

@@ -1,5 +1,11 @@
 @import "@servicenow/sass-kit/host";
 
+/* Flip video horizontally: */
+video {
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+}
+
 @keyframes flasher {
   0% {
     background-color: #FFF;

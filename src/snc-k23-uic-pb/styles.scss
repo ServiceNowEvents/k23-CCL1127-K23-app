@@ -1,5 +1,10 @@
 @import "@servicenow/sass-kit/host";
 
+video {
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+}
+
 @keyframes flasher {
   0% {
     background-color: #FFF;

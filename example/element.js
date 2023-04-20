@@ -60,8 +60,8 @@ const view = (state, { updateState }) => {
             <input
                type="number"
                style={{ width: "2rem" }}
-               on-blur={({ target: { value } }) =>
-                  updateState({ countdownDurationSeconds: value })
+               on-blur={({ target: { value: countdownDurationSeconds } }) =>
+                  updateState({ countdownDurationSeconds })
                }
                value={countdownDurationSeconds}
             />

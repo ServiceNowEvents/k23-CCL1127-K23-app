@@ -1,7 +1,7 @@
 import { createCustomElement } from "@servicenow/ui-core";
 import snabbdom from "@servicenow/ui-renderer-snabbdom";
 import styles from "./styles.scss";
-import { properties } from "./properties";
+import { properties } from "./properties"; // Moved this to its own file to save space in this file
 import { selectMediaDevice, toggleTracks, snap, getConnectedDevices } from "./media";
 import { PHOTOBOOTH_CAMERA_SNAPPED, PHOTOBOOTH_AVAILABLE_CAMERAS_UPDATED } from "./events";
 import { actionTypes } from "@servicenow/ui-core";

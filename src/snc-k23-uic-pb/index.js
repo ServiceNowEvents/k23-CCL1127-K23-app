@@ -2,8 +2,8 @@ import { createCustomElement } from "@servicenow/ui-core";
 import snabbdom from "@servicenow/ui-renderer-snabbdom";
 import styles from "./styles.scss";
 import { selectMediaDevice, toggleTracks, snap } from "./media";
-import { PHOTOBOOTH_CAMERA_SNAPPED } from "./events";
 import { actionTypes } from "@servicenow/ui-core";
+import { PHOTOBOOTH_CAMERA_SNAPPED, PHOTOBOOTH_AVAILABLE_CAMERAS_UPDATED } from "./events";
 
 const { COMPONENT_CONNECTED, COMPONENT_PROPERTY_CHANGED, COMPONENT_DOM_READY } =
 	actionTypes;
@@ -23,14 +23,14 @@ const initializeMedia = ({
 	const context = canvas.getContext("2d");
 
 	// Get access to the camera!
-	selectMediaDevice({enabled, video});
+	selectMediaDevice({ enabled, video });
 
 	// We will need these later when taking snapshots
 	updateState({
 		video,
 		context
 	});
-	
+
 };
 
 const view = (state, { updateState }) => {
@@ -70,10 +70,10 @@ const actionHandlers = {
 		const propertyHandlers = {
 			snapRequested: () => {
 				if (value && value != previousValue) {
-					snap({ state, updateState }).then(({context}) => {
+					snap({ state, updateState }).then(({ context }) => {
 						console.log("SNAP COMPLETED", context);
 						const imageData = context.canvas.toDataURL("image/jpeg");
-						dispatch(PHOTOBOOTH_CAMERA_SNAPPED, {imageData});
+						dispatch(PHOTOBOOTH_CAMERA_SNAPPED, { imageData });
 					});
 				} else if (!value && snapState != "idle") {
 					// Reset if the value for snapRequested is empty
@@ -89,7 +89,7 @@ const actionHandlers = {
 		if (propertyHandlers[name]) {
 			propertyHandlers[name]();
 		}
-	},	
+	},
 };
 
 const dispatches = {}; // Events that will be dispatched by this component
